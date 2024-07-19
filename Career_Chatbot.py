@@ -10,13 +10,12 @@ import os
 from langchain.chains.question_answering import load_qa_chain
 from langchain.llms import OpenAI
 
-os.environ["OPENAI_API_KEY"] = "sk-proj-9xNe3SSPlPU3vlgfTXrKT3BlbkFJarUGg3bZDVhd40xZHa2Z"
+os.environ["OPENAI_API_KEY"] = "api key"
 
-# provide the path of  pdf file/files.
+
 pdfreader = PdfReader(r"Career.pdf")
 
-# from typing_extensions import Concatenate
-# read text from pdf
+
 raw_text = ''
 for i, page in enumerate(pdfreader.pages):
     content = page.extract_text()
@@ -24,7 +23,6 @@ for i, page in enumerate(pdfreader.pages):
     if content:
         raw_text += content
 
-# We need to split the text using Character Text Split such that it sshould not increse token size
 text_splitter = CharacterTextSplitter(
     separator = "\n",
     chunk_size = 800,
@@ -33,7 +31,7 @@ text_splitter = CharacterTextSplitter(
 )
 texts = text_splitter.split_text(raw_text)
 
-# Download embeddings from OpenAI
+
 embeddings = OpenAIEmbeddings()
 
 document_search = FAISS.from_texts(texts, embeddings)
@@ -45,14 +43,14 @@ chain = load_qa_chain(OpenAI(), chain_type="stuff")
 
 def get_response():
     user_input = user_input_entry.get("1.0", tk.END)
-    bot_response = ""  # Initialize bot_response with an empty string
+    bot_response = ""  
 
     if user_input.strip().lower() in ["hi", "hello", "hey","hy","hi ruby","hello ruby","hey ruby","hy ruby"]:
         bot_response = "Hello, welcome to Luminar Career Guide. How can I assist you today!"
     elif user_input.strip().lower() in ["bye","by","bye ruby","by ruby","thank you","thanks"]:
         bot_response = "bye, and have a good career ahead"
     else:
-        question = user_input.strip()  # Extract and clean the question from user input
+        question = user_input.strip() 
         if len(question) < 4:
             bot_response = "Please enter a valid question!"
         else:
